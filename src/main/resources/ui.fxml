@@ -45,14 +45,14 @@
             </children>
         </VBox>
 
-        <VBox fx:id="messageContainer" prefWidth="500.0">
+        <VBox fx:id="messageBox" prefWidth="500.0">
             <children>
 
                 <Label fx:id="chatName" text="Your current chat appears here" />
 
                 <ScrollPane fx:id="messages" prefWidth="500.0">
                     <content>
-                        <VBox fx:id="messageContainer" />
+                        <VBox fx:id="messagesContainer" />
                     </content>
                 </ScrollPane>
             </children>
