@@ -11,33 +11,45 @@ public class SoundPlayer {
     private static final double interToneTime = timeUnit; // time units for one morse new character
     private static final double interCharacterTime = 2*timeUnit; // timeUnits for one morse new character. Additive upon interToneTime
     private static final double spaceTime = 4*timeUnit; // timeUnits for one morse space pulse. Additive upon interCharacterTime
-    
+    private static boolean playing = false;
 
     public static void playSequence(byte[] data){
-
-        AudioFormat format = new AudioFormat(sampleRate, 8, 1, true, false);
-        DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-        SourceDataLine line;
-        try {
-            line = (SourceDataLine) AudioSystem.getLine(info);
-            line.open(format);
-            line.start();
-
-            for(byte character : data){
-                playCharacter(character, line);
+        new Thread(() -> {
+            synchronized (SoundPlayer.class){
+                if(playing){
+                    return;
+                }
+                playing = true;
+            } 
+            try {
+                runPlaySequence(data);
+                System.out.println("Playing sequence");
+            } finally {
+                playing = false;
             }
-    
-            line.drain();
-            line.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        
-
-        
+        }).start(); 
     }
 
+    private static void runPlaySequence(byte[] data){
+    AudioFormat format = new AudioFormat(sampleRate, 8, 1, true, false);
+    DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+    SourceDataLine line;
+    try {
+        line = (SourceDataLine) AudioSystem.getLine(info);
+        line.open(format);
+        line.start();
+
+        for(byte character : data){
+            playCharacter(character, line);
+        }
+
+        line.drain();
+        line.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+        return;
+    }
+}
     private static void playCharacter(byte character, SourceDataLine line){
         if(character == (byte) 0b11111111){
             playTone(spaceTime, false, line);

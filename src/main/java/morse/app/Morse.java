@@ -22,7 +22,7 @@ public class Morse {
         tempMorseMap.put('c', (byte) 0b011010);
         tempMorseMap.put('d', (byte) 0b001100);
         tempMorseMap.put('e', (byte) 0b000010);
-        tempMorseMap.put('f', (byte) 0b010101);
+        tempMorseMap.put('f', (byte) 0b010010);
         tempMorseMap.put('g', (byte) 0b001110);
         tempMorseMap.put('h', (byte) 0b010000);
         tempMorseMap.put('i', (byte) 0b000100);
@@ -43,6 +43,9 @@ public class Morse {
         tempMorseMap.put('x', (byte) 0b011001);
         tempMorseMap.put('y', (byte) 0b011011);
         tempMorseMap.put('z', (byte) 0b011100);
+        tempMorseMap.put('æ', (byte) 0b010101);
+        tempMorseMap.put('ø', (byte) 0b011110);
+        tempMorseMap.put('å', (byte) 0b101101);
         tempMorseMap.put('1', (byte) 0b101111);
         tempMorseMap.put('2', (byte) 0b100111);
         tempMorseMap.put('3', (byte) 0b100011);
@@ -84,6 +87,9 @@ public class Morse {
         tempCharMap.put((byte) 0b011001, 'x');
         tempCharMap.put((byte) 0b011011, 'y');
         tempCharMap.put((byte) 0b011100, 'z');
+        tempCharMap.put((byte) 0b010101, 'æ');
+        tempCharMap.put((byte) 0b011110, 'ø');
+        tempCharMap.put((byte) 0b101101, 'å');
         tempCharMap.put((byte) 0b101111, '1');
         tempCharMap.put((byte) 0b100111, '2');
         tempCharMap.put((byte) 0b100011, '3');
@@ -99,8 +105,9 @@ public class Morse {
     }
 
     public static String clean(String text){
-        return text.replaceAll("[^a-zA-Z0-9\\s]", "").replaceAll("[\\n\\r]", " ");
+        return text.replaceAll("[^a-zA-Z0-9\\sæøåÆØÅ]", "").replaceAll("[\\n\\r]", " ");
     }    
+    
 
     public static byte[] encode(String text) {
         text = clean(text);
@@ -128,7 +135,8 @@ public class Morse {
         StringBuilder output = new StringBuilder();
         for (byte character : morse){
             if(character == (byte) 0b11111111){
-                output.append('|');
+                output.append('/');
+                output.append(' ');
             }
             else{
                 boolean started = false;
@@ -145,32 +153,26 @@ public class Morse {
         return output.toString();
     }
 
-    public static byte[] deformatEncoded(String morse){
-        int length = 0;
-        char[] chars = morse.toCharArray();
-        for(char character : chars){
-            if(character ==' '){
-                length++;
-            }
-        }
-        byte[] output = new byte[length];
-        int j = 0;
-        byte h = 0;
-        byte next = 0b00000000;
-        for(int i = 0; i < chars.length; i++){
-            if(chars[i] == ' '){
-                next += (1 << (h + 1));
-                output[j] = next;
-                j += 1;
-                h = 0;
-            } else{
-                if(chars[i] == '-'){
-                    next += (1 << (h));
-                }
-                h += 1;
-            }
-        }
-        return output;
-    }
+    public static byte[] deformatEncoded(String encoded){
+        String[] parts = encoded.split("\\s");
+        byte[] morse = new byte[parts.length];
 
+        for (int i = 0; i < parts.length; i++) {
+            if(parts[i].equals("|") || parts[i].equals("/")){
+                morse[i] = (byte) 0b11111111;
+            }
+            else{
+                byte character = 0;
+                for(int j = 0; j < parts[i].length(); j++){
+                    char currentSignal = parts[i].charAt(j);
+                    if(currentSignal == '-'){
+                        character |= 1 << (parts[i].length()-j-1);
+                    }
+                }
+                character |= 1 << (parts[i].length());
+                morse[i] = character;
+            }
+        }
+        return morse;
+    }
 }

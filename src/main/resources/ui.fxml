@@ -7,58 +7,87 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 
 
-<HBox fx:controller="morse.app.Controller" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefWidth="1000" prefHeight="800" spacing="10">
+<HBox fx:controller="morse.app.Controller" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefWidth="1000" prefHeight="600" minWidth="420.0" spacing="10">
     <padding>
         <Insets top="10" right="10" bottom="10" left="10" />
     </padding>
     <children>
-        <VBox fx:id="buttonContainer" prefWidth="80.0">
+        <VBox fx:id="buttonContainer" prefWidth="80.0" minWidth="80.0" maxWidth="80.0">
             <children>
+                <Button fx:id="joinButton" text="Join chat" prefWidth="80"/>
+                <Button fx:id="hostButton" text="Host chat" prefWidth="80"/>
                 <Button fx:id="translatorButton" text="translator" prefWidth="80"/>
                 <Button fx:id="settingsButton" text="settings" prefWidth="80"/>
                 <Button fx:id="exitButton" text="exit" prefWidth="80"/>
             </children>
         </VBox>
 
-        <VBox fx:id="translator" prefWidth="500.0" visible="false" managed="false">
+        <VBox fx:id="joinContainer" prefWidth="500.0" visible="false" managed="false">
+            <children>
+                <Label text="Enter chat ID" />
+                <TextField fx:id="chatID" prefWidth="500.0" />
+                <Label text="Enter chat code" />
+                <TextField fx:id="chatCode" prefWidth="500.0" />
+                <Button fx:id="joinChatButton" text="Join" />
+            </children>
+        </VBox>
+
+        <VBox fx:id="hostContainer" prefWidth="500.0" visible="false" managed="false">
+            <children>
+                <Label text="chat ID" />
+                <Label fx:id="hostChatID" />
+                <Label text="chat code" />
+                <Label fx:id="hostChatCode" />
+                <Button fx:id="hostChatButton" text="Host Chat" />
+            </children>
+        </VBox>
+
+        <VBox fx:id="translatorContainer" prefWidth="500.0" visible="false" managed="false">
             <children>
                 <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefWidth="500.0">
                     <items>
                         <VBox>
                             <Label text="Input" />
-                            <TextArea fx:id="inputTextArea" prefWidth="500.0" />
+                            <TextArea fx:id="inputTextArea" prefWidth="500.0" wrapText="true"/>
                         </VBox>
                         <VBox>
                             <Label text="Translated" />
-                            <TextArea fx:id="outputTextArea" prefWidth="500.0" editable="false" />
+                            <TextArea fx:id="outputTextArea" prefWidth="500.0" editable="false" wrapText="true"/>
+                            <Button fx:id="playTranslated" text="Play" />
                         </VBox>
                     </items>
                 </SplitPane>
             </children>
         </VBox>
 
-        <VBox fx:id="settings" prefWidth="500.0" visible="false" managed="false">
+        <VBox fx:id="settingsContainer" prefWidth="500.0" visible="false" managed="false">
             <children>
                 <Label text="Settings - coming soon" />
             </children>
         </VBox>
+        <VBox fx:id="messageBox" prefWidth="500.0" minWidth="300.0" maxWidth="4000.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
 
-        <VBox fx:id="messageBox" prefWidth="500.0">
             <children>
-
                 <Label fx:id="chatName" text="Your current chat appears here" />
-
-                <ScrollPane fx:id="messages" prefWidth="500.0">
+                <ScrollPane fx:id="messages" prefHeight="400" VBox.vgrow="ALWAYS">
                     <content>
                         <VBox fx:id="messagesContainer" />
                     </content>
                 </ScrollPane>
+                <HBox fx:id="messageInputContainer" prefWidth="500.0" minWidth="300.0" maxWidth="4000.0" VBox.vgrow="ALWAYS" >
+                    <padding>
+                        <Insets top="5" right="0" bottom="20" left="0" />
+                    </padding>
+                    <TextArea fx:id="messageInput" prefWidth="500.0" wrapText="true" HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="sendButton" text="Send" minWidth="50"/>
+                </HBox>
             </children>
         </VBox>
 
-        <VBox fx:id="profile" prefWidth="300.0">
+        <VBox fx:id="profile" prefWidth="300.0" maxWidth="300.0" minWidth="0.0">
             <children>
                 <Label fx:id="username" text="Your username" />
             </children>

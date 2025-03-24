@@ -19,6 +19,9 @@ public class UserInterface extends Application{
         // Create a scene with the loaded FXML
         Scene scene = new Scene(root);
 
+        stage.setMinWidth(420.0);
+        stage.setMinHeight(200.0);
+
         // Set up the primary stage
         stage.setTitle("My JavaFX App");
         stage.setScene(scene);
