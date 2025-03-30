@@ -106,7 +106,32 @@ public class Morse {
 
     public static String clean(String text){
         return text.replaceAll("[^a-zA-Z0-9\\sæøåÆØÅ]", "").replaceAll("[\\n\\r]", " ");
-    }    
+    }
+
+    public static String cleanFormatted(String text){
+        // Remove all non space, non - . | / characters
+        StringBuilder cleaned = new StringBuilder(text.replaceAll("[^\\-\\.\\|/\\s]", "").replaceAll("[\\n\\r]", ""));
+        // Remove all additional spaces and additional new word characters
+        for(int i = 0; i < cleaned.length(); i++){
+            if(cleaned.charAt(i) == ' '){
+                int j = i+1;
+                while(j < cleaned.length() && cleaned.charAt(j) == ' '){
+                    cleaned.deleteCharAt(j);
+                }
+            }
+            if(cleaned.charAt(i) == '/' || cleaned.charAt(i) == '|'){
+                if(cleaned.charAt(i-1) == ' '){
+                    cleaned.deleteCharAt(i-1);
+                }
+                int j = i+1;
+                while(j < cleaned.length() && (cleaned.charAt(j) == '/' || cleaned.charAt(j) == '|' || cleaned.charAt(j) == ' ')){
+                    System.out.println("deleting: " + cleaned.charAt(j));
+                    cleaned.deleteCharAt(j);
+                }
+            }
+        }
+        return cleaned.toString();
+    }
     
 
     public static byte[] encode(String text) {
@@ -154,6 +179,7 @@ public class Morse {
     }
 
     public static byte[] deformatEncoded(String encoded){
+        encoded = cleanFormatted(encoded);
         String[] parts = encoded.split("\\s");
         byte[] morse = new byte[parts.length];
 

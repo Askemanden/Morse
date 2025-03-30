@@ -18,7 +18,6 @@ public class AppTest
         byte[] encoded = Morse.encode("i åæam,. a pe;rson\ndu er fed");
         String decoded = Morse.decode(encoded);
         assertEquals("i am a person du er fed", decoded);
-        SoundPlayer.playSequence(encoded);
     }
 
     @Test
@@ -39,6 +38,24 @@ public class AppTest
         for (int i = 0; i < encoded.length; i++){
             assertEquals(encoded[i], deformatted[i]);
         }
+    }
+
+    @Test
+    public void testCleanFormatted(){
+        String testString = "i am a person du er fed";
+        byte[] encoded = Morse.encode(testString);
+        String formatted = Morse.formatEncoded(encoded);
+        StringBuilder toClean = new StringBuilder(formatted);
+        toClean.append(" 1  23\n  ");
+        toClean.insert(3, "jeg er en abe  \n");
+        toClean.insert(2, ",,,");
+        String cleanedFormatted = Morse.cleanFormatted(toClean.toString());
+        assertEquals(formatted, cleanedFormatted);
+    }
+
+    @Test
+    public void testSoundPlayer(){
+        SoundPlayer.playSequence(new byte[]{(byte) 0b10101010, (byte) 0b01010101});
     }
 
     @Test

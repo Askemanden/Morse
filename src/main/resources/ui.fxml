@@ -37,6 +37,8 @@
 
         <VBox fx:id="hostContainer" prefWidth="500.0" visible="false" managed="false">
             <children>
+                <Label text="What will the chat be called?" />
+                <TextField fx:id="ChatName"/>
                 <Label text="chat ID" />
                 <Label fx:id="hostChatID" />
                 <Label text="chat code" />
@@ -77,11 +79,11 @@
                         <VBox fx:id="messagesContainer" />
                     </content>
                 </ScrollPane>
-                <HBox fx:id="messageInputContainer" prefWidth="500.0" minWidth="300.0" maxWidth="4000.0" VBox.vgrow="ALWAYS" >
+                <HBox fx:id="messageInputContainer" prefWidth="500.0" minWidth="300.0" maxWidth="4000.0" VBox.vgrow="ALWAYS" prefHeight="20">
                     <padding>
                         <Insets top="5" right="0" bottom="20" left="0" />
                     </padding>
-                    <TextArea fx:id="messageInput" prefWidth="500.0" wrapText="true" HBox.hgrow="ALWAYS"/>
+                    <TextArea fx:id="messageInput" prefWidth="500.0" wrapText="true" HBox.hgrow="ALWAYS" prefHeight="20"/>
                     <Button fx:id="sendButton" text="Send" minWidth="50"/>
                 </HBox>
             </children>

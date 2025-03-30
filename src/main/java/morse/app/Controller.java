@@ -39,6 +39,8 @@ public class Controller implements Initializable {
     @FXML
     VBox hostContainer;
     @FXML
+    TextField ChatName;
+    @FXML
     Label hostChatID;
     @FXML
     Label hostChatCode;
@@ -72,6 +74,11 @@ public class Controller implements Initializable {
     TextArea messageInput;
     @FXML
     Button sendButton;
+
+    // If the user is hosting a chat, this will be the host object
+    Host host;
+    // If the user is joining a chat, this will be the client object
+    Client client;
 
     final Node[] sideBar = new Node[4];
     byte[] morse;
@@ -111,6 +118,14 @@ public class Controller implements Initializable {
 
         // Chat controlls
         // TODO Unimplemented
+        messageInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            newValue = Morse.cleanFormatted(newValue);
+            if(newValue.length() > 0 && newValue.charAt(newValue.length() - 1) == '\n'){
+                newValue = newValue.substring(0, newValue.length() - 2); // Remove newline
+                sendMessage();
+            }
+            messageInput.setText(newValue);
+        });
         sendButton.setOnAction(event -> sendMessage());
 
     }
@@ -122,7 +137,9 @@ public class Controller implements Initializable {
     }
 
     private void hostChat(){
-        // TODO Unimplemented
+        host = new Host(chatName.getText());
+        hostChatID.setText(host.networkName);
+        hostChatCode.setText(String.valueOf(host.port));
     }
     
     private void sendMessage() {
@@ -131,7 +148,7 @@ public class Controller implements Initializable {
         // TODO Unimplemented
     }
 
-    private void addMessage(String message){
+    public void addMessage(String message){
         Label newMessage = new Label(message);
         messagesContainer.getChildren().add(newMessage);
         messages.vvalueProperty().bind(messagesContainer.heightProperty());

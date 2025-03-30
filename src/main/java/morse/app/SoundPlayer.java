@@ -25,7 +25,9 @@ public class SoundPlayer {
                 runPlaySequence(data);
                 System.out.println("Playing sequence");
             } finally {
-                playing = false;
+                synchronized (SoundPlayer.class){
+                    playing = false;
+                }
             }
         }).start(); 
     }
